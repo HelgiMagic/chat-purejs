@@ -190,7 +190,7 @@ class ChatController {
   handleSendMessage(event) {
     event.preventDefault();
     const newMessage = {
-      id: Date.now(), // Use current timestamp as a unique ID for simplicity
+      id: Date.now(),
       user_id: this.model.currentUserId,
       message: this.view.messageInput.value,
       created_at: new Date().toISOString(),
