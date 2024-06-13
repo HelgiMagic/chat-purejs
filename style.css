@@ -1,5 +1,14 @@
+* {
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'Montserrat';
+  src: url('public/Montserrat-Regular.ttf');
+}
+
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Montserrat', sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -8,10 +17,14 @@ body {
   background-color: #f4f4f4;
 }
 
+input,
+button {
+  font-family: inherit;
+}
+
 #chat-container {
-  width: 300px;
-  height: 500px;
-  border: 1px solid #ccc;
+  width: 100%;
+  height: 100vh;
   background-color: #fff;
   display: flex;
   flex-direction: column;
@@ -20,39 +33,155 @@ body {
 #message-list {
   flex: 1;
   overflow-y: auto;
+  width: 100%;
   padding: 10px;
+  margin: 0 auto;
+}
+
+.message-row {
+  display: flex;
+
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.my-row {
+  justify-content: end;
 }
 
 .message {
   margin-bottom: 10px;
   padding: 10px;
-  border-radius: 5px;
-  background-color: #e1e1e1;
+  border-radius: 14px;
+  background-color: #ebedf0;
+
+  max-width: 338px;
+}
+
+.meta {
+  font-size: 14px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+.message .meta {
+  color: #4e7d7c;
+}
+
+.my-message {
+  background-color: #eff3ff;
+}
+
+.my-message .meta {
+  color: #2688eb;
+}
+
+.delete-button,
+.delete-button:hover {
+  padding: 0;
+  background: transparent;
+}
+
+.delete-button svg path {
+  fill: #9aa2ae;
+}
+
+.delete-button:hover svg path {
+  fill: red;
 }
 
 #message-form {
   display: flex;
   padding: 10px;
-  border-top: 1px solid #ccc;
+  max-width: 1300px;
+  margin: 0 auto;
+  width: 100%;
+  gap: 10px;
 }
 
 #message-input {
   flex: 1;
-  padding: 10px;
+  padding: 15px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 15px;
+
+  box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.08), 0px 4px 16px rgba(0, 0, 0, 0.08);
+  box-shadow: 2px 21px 12px 0px rgba(58, 49, 118, 0.01),
+    2px 13px 10px 0px rgba(58, 49, 118, 0.02),
+    2px 7px 8px 0px rgba(58, 49, 118, 0.02),
+    0px 3px 8px 0px rgba(58, 49, 118, 0.04);
+  outline: none;
+}
+
+#message-input:hover,
+#message-input:focus {
+  box-shadow: 2px 21px 12px 0px rgba(58, 49, 118, 0.02),
+    2px 13px 10px 0px rgba(58, 49, 118, 0.04),
+    2px 7px 8px 0px rgba(58, 49, 118, 0.04),
+    0px 3px 8px 0px rgba(58, 49, 118, 0.08);
 }
 
 button {
   padding: 10px;
   border: none;
-  background-color: #007bff;
+  background-color: #4e7d7c;
   color: #fff;
   cursor: pointer;
   border-radius: 5px;
-  margin-left: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button:hover {
-  background-color: #0056b3;
+  background-color: #3e6463;
+}
+
+.dropdown {
+  position: relative;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9;
+  min-width: 100px;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+
+  top: 0;
+  transform: translateY(calc(-100% - 10px));
+
+  border-radius: 10px;
+}
+
+.dropdown-content .emoji {
+  padding: 12px 16px;
+  display: block;
+  cursor: pointer;
+
+  border-radius: inherit;
+}
+
+.dropdown-content .emoji:hover {
+  background-color: #f1f1f1;
+}
+
+.dropdown.show .dropdown-content {
+  display: grid;
+}
+
+@media (max-width: 1200px) {
+  .dropdown-content {
+    right: -30px;
+  }
 }
