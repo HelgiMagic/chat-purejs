@@ -4,16 +4,33 @@ class ChatModel {
   constructor() {
     this.messages = [];
     this.currentUserId = 1;
+    this.fileIndex = 1;
+    this.totalFiles = 4; // эмуляция порционной загрузки
+    this.loading = false;
+    this.allFilesLoaded = false;
   }
 
   loadMessages() {
-    return fetch('MOCK_DATA.json')
+    if (this.fileIndex > this.totalFiles || this.allFilesLoaded) {
+      this.allFilesLoaded = true;
+      return Promise.resolve([]);
+    }
+    this.loading = true;
+    return fetch(`MOCK_DATA${this.fileIndex}.json`)
       .then((response) => response.json())
       .then((data) => {
-        this.messages = data.sort(
-          (a, b) => new Date(a.created_at) - new Date(b.created_at)
-        );
+        if (data.length === 0) {
+          this.allFilesLoaded = true;
+        } else {
+          // this.messages = this.messages.concat(data); // Добавляем в конец
+          this.messages = data.concat(this.messages); // Добавляем в начало
+          this.fileIndex++;
+        }
+        this.loading = false;
         return this.messages;
+      })
+      .catch(() => {
+        this.loading = false;
       });
   }
 
@@ -141,7 +158,7 @@ class ChatController {
     this.view = view;
 
     this.currentIndex = 0;
-    this.batchSize = 10;
+    this.batchSize = 50;
 
     this.view.messageForm.addEventListener('submit', (event) => {
       this.handleSendMessage(event);
@@ -167,7 +184,6 @@ class ChatController {
     });
   }
 
-  // чтобы полноценно реализовать infinity scroll нужна порционная загрузка данных с сервера, на бесплатных вариантах такого нет. Поэтому просто реализовал подгрузку через обычный локальный JSON и постепенное отображение
   loadMessages(prepend = false) {
     let messages = this.model.getMessages(this.currentIndex, this.batchSize);
     if (prepend) {
@@ -183,8 +199,7 @@ class ChatController {
       this.view.messageList.scrollTop = newScrollHeight - previousScrollHeight;
     }
 
-    this.currentIndex -= this.batchSize;
-    if (this.currentIndex < 0) this.currentIndex = 0;
+    this.model.loadMessages();
   }
 
   handleSendMessage(event) {
@@ -202,7 +217,11 @@ class ChatController {
   }
 
   handleScroll() {
-    if (this.view.messageList.scrollTop === 0) {
+    if (
+      this.view.messageList.scrollTop === 0 &&
+      !this.model.loading &&
+      !this.model.allFilesLoaded
+    ) {
       this.loadMessages(true);
     }
   }
