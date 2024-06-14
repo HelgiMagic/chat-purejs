@@ -56,10 +56,14 @@ button {
   background-color: #ebedf0;
 
   max-width: 338px;
+
+  text-wrap: wrap;
+  word-break: break-all;
 }
 
 .meta {
   font-size: 14px;
+  gap: 10px;
 
   display: flex;
   justify-content: space-between;
